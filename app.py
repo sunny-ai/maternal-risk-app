@@ -106,7 +106,7 @@ def home():
             flash('An error occurred during prediction', 'error')
             return render_template('index.html')
     
-    return render_template('index.html'))
+    return render_template('index.html')
 
 if __name__ == '__main__':
     with app.app_context():
