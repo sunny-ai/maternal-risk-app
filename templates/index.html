@@ -1,50 +1,197 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Maternal Risk Prediction</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Risk Assessment</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <style>
-        .form-group { margin: 10px 0; }
-        .alert { padding: 10px; margin: 10px 0; }
-        .error { color: red; }
-        .success { color: green; }
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .main-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .input-group-text {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        .risk-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-predict {
+            background-color: #0d6efd;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-predict:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
+
 <body>
-    <h1>Maternal Health Risk Assessment</h1>
-    
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert {{ category }}">{{ message }}</div>
-            {% endfor %}
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <i class="fas fa-baby-carriage me-2"></i>Pregnancy Risk Assessment
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-5">
+        {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
         {% endif %}
-    {% endwith %}
-    
-    <form method="POST">
-        <div class="form-group">
-            <label>Age (years):</label>
-            <input type="number" name="age" step="0.1" min="15" max="50" required>
+
+        <div class="card main-card p-4 mb-4">
+            <h3 class="text-center mb-4"><i class="fas fa-notes-medical me-2"></i>Patient Information</h3>
+
+            <form method="post">
+                <div class="row g-4">
+                    <!-- Column 1 -->
+                    <div class="col-lg-6">
+                        <!-- Basic Info -->
+                        <div class="mb-4">
+                            <label class="form-label">Age (years)</label>
+                            <input type="number" class="form-control" name="age" placeholder="e.g., 28" min="15"
+                                max="50" required>
+                        </div>
+
+                        <!-- Blood Pressure -->
+                        <div class="mb-4">
+                            <label class="form-label">Blood Pressure (mmHg)</label>
+                            <input type="text" class="form-control" name="blood_pressure" pattern="\d{2,3}/\d{2,3}"
+                                placeholder="120/80" required>
+                        </div>
+
+                        <!-- BMI -->
+                        <div class="mb-4">
+                            <label class="form-label">BMI (kg/m²)</label>
+                            <input type="number" step="0.1" class="form-control" name="bmi" placeholder="e.g., 24.5"
+                                min="15" max="45" required>
+                        </div>
+
+                        <!-- Gestational Age -->
+                        <div class="mb-4">
+                            <label class="form-label">Gestational Age (weeks)</label>
+                            <input type="number" class="form-control" name="gestational_age" placeholder="e.g., 28"
+                                min="4" max="42" required>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="col-lg-6">
+                        <!-- Medical History -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-4">
+                                <label class="form-label">C-Sections</label>
+                                <input type="number" class="form-control" name="previous_c_section" placeholder="0"
+                                    min="0" max="5" required>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Miscarriages</label>
+                                <input type="number" class="form-control" name="previous_miscarriages" placeholder="0"
+                                    min="0" max="5" required>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Preterm Births</label>
+                                <input type="number" class="form-control" name="previous_preterm_birth" placeholder="0"
+                                    min="0" max="3" required>
+                            </div>
+                        </div>
+
+                        <!-- Lab Results -->
+                        <div class="mb-4">
+                            <label class="form-label">Hemoglobin (g/dL)</label>
+                            <input type="number" step="0.1" class="form-control" name="hb_level"
+                                placeholder="e.g., 12.5" min="7" max="20" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Urine Protein (mg/dL)</label>
+                            <input type="number" step="0.1" class="form-control" name="urine_protein"
+                                placeholder="e.g., 15.0" min="0" max="300" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Blood Glucose (mg/dL)</label>
+                            <input type="number" step="0.1" class="form-control" name="blood_glucose"
+                                placeholder="e.g., 90.0" min="50" max="300" required>
+                        </div>
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="col-12">
+                        <div class="row g-3">
+                            <div class="col-md-3 form-check">
+                                <input class="form-check-input" type="checkbox" name="chronic_hypertension" value="1">
+                                <label class="form-check-label">Chronic Hypertension</label>
+                            </div>
+                            <div class="col-md-3 form-check">
+                                <input class="form-check-input" type="checkbox" name="diabetes" value="1">
+                                <label class="form-check-label">Diabetes</label>
+                            </div>
+                            <div class="col-md-3 form-check">
+                                <input class="form-check-input" type="checkbox" name="gestational_diabetes" value="1">
+                                <label class="form-check-label">Gest. Diabetes</label>
+                            </div>
+                            <div class="col-md-3 form-check">
+                                <input class="form-check-input" type="checkbox" name="preeclampsia_history" value="1">
+                                <label class="form-check-label">Preeclampsia History</label>
+                            </div>
+                            <!-- Add more checkboxes as needed -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-predict">
+                        <i class="fas fa-heartbeat me-2"></i>Assess Risk
+                    </button>
+                </div>
+            </form>
         </div>
 
-        <div class="form-group">
-            <label>BMI:</label>
-            <input type="number" name="bmi" step="0.01" min="15" max="50" required>
+        <!-- Results Card -->
+        {% if prediction %}
+        <div class="card risk-card p-4 text-center">
+            <h3 class="mb-3"><i class="fas fa-stethoscope me-2"></i>Risk Assessment</h3>
+            <div class="display-4 fw-bold text-primary mb-2 text-uppercase">{{ prediction }}</div>
+            <div class="text-muted">Confidence: {{ probability }}%</div>
         </div>
+        {% endif %}
+    </div>
 
-        <div class="form-group">
-            <label>Blood Pressure (mmHg):</label>
-            <input type="text" name="blood_pressure" pattern="\d+/\d+" 
-                   placeholder="120/80" required>
-        </div>
-
-        <div class="form-group">
-            <label>Gestational Age (weeks):</label>
-            <input type="number" name="gestational_age" min="1" max="42" required>
-        </div>
-
-        <!-- Add all other required fields following the same pattern -->
-        
-        <button type="submit">Predict Risk</button>
-    </form>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
