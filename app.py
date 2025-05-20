@@ -7,7 +7,7 @@ from logging.handlers import RotatingFileHandler
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/maternal.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///maternal.db'
 app.config['SECRET_KEY'] = 'your-secret-key'
 db = SQLAlchemy(app)
 
