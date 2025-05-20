@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maternal Risk Prediction</title>
+    <style>
+        .form-group { margin: 10px 0; }
+        .alert { padding: 10px; margin: 10px 0; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Maternal Health Risk Assessment</h1>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form method="POST">
+        <div class="form-group">
+            <label>Age (years):</label>
+            <input type="number" name="age" step="0.1" min="15" max="50" required>
+        </div>
+
+        <div class="form-group">
+            <label>BMI:</label>
+            <input type="number" name="bmi" step="0.01" min="15" max="50" required>
+        </div>
+
+        <div class="form-group">
+            <label>Blood Pressure (mmHg):</label>
+            <input type="text" name="blood_pressure" pattern="\d+/\d+" 
+                   placeholder="120/80" required>
+        </div>
+
+        <div class="form-group">
+            <label>Gestational Age (weeks):</label>
+            <input type="number" name="gestational_age" min="1" max="42" required>
+        </div>
+
+        <!-- Add all other required fields following the same pattern -->
+        
+        <button type="submit">Predict Risk</button>
+    </form>
+</body>
+</html>
